@@ -18,6 +18,7 @@ RSpec.describe 'creating a lesson from a CSV', :js do
 
   it 'can parse lessons from a CSV' do
     visit new_lesson_upload_path
+
     within '#lesson_create_form' do
       attach_file 'lesson_upload_file', Rails.root.join(path)
       click_button I18n.t('lesson_uploads.new.create_lessons')

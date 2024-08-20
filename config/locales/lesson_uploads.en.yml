@@ -1,0 +1,5 @@
+en:
+  lesson_uploads:
+    new:
+      create_lessons: "Create Lessons"
+      update_lessons: "Update Lessons"

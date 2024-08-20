@@ -1,0 +1,14 @@
+= content_for :head do
+  %link{ rel: 'stylesheet',
+         href: 'https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined' }
+
+%main.flex.flex-col.gap-12.overflow-y-auto.p-3
+  = render 'shared/subtitle', text: t('.create_lessons')
+
+  %section.flex.flex-col.gap-3.border-2.border-main.rounded.p-3
+    %h2= t('.create_lessons')
+    = form_with scope: :lesson_upload,
+                html: { class: 'form', id: 'lesson_create_form'} do |f|
+      = f.file_field :file
+      = f.submit t('.create_lessons'),
+                 class: 'btn btn-main'
