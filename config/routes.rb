@@ -17,6 +17,8 @@ Rails.application.routes.draw do
       resources :lessons
       resources :lesson_calendars, only: %i[index]
       resources :lesson_searches, only: %i[index]
+      resources :lesson_uploads, only: %i[create new show]
+      patch 'lesson_uploads', to: 'lesson_uploads#update', as: :lesson_uploads_update
       resources :lesson_uses, only: %i[index]
       resources :lesson_versions, only: %i[show update]
       resources :missing_lessons, only: %i[index]

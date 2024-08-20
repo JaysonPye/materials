@@ -5,6 +5,11 @@ class Lesson < ApplicationRecord
 
   TYPES = %w[DailyActivity EnglishClass Exercise EveningClass KindyPhonic
              PhonicsClass SpecialLesson StandShowSpeak].freeze
+  CSV_HEADERS = %w[id admin_approval curriculum_approval goal internal_notes
+                   level released title type add_difficulty example_sentences
+                   extra_fun instructions large_groups links materials notes
+                   outro subtype topic vocab intro lang_goals interesting_fact
+                   status changed_lesson_id warning].freeze
 
   before_destroy :check_not_used
 
