@@ -8,7 +8,12 @@
   %section.flex.flex-col.gap-3.border-2.border-main.rounded.p-3
     %h2= t('.create_lessons')
     = form_with scope: :lesson_upload,
-                html: { class: 'form', id: 'lesson_create_form'} do |f|
-      = f.file_field :file
+                html: { class: 'form',
+                        data: { controller: 'lesson-uploader',
+                                action: 'lesson-uploader#displayLessons',
+                                'lesson-uploader-action-value': 'create',
+                                'lesson-uploader-headers-value': Lesson::CSV_HEADERS.to_json },
+                        id: 'lesson_create_form' } do |f|
+      = f.file_field :file, required: true, data: { 'lesson-uploader-target': 'fileInput' }
       = f.submit t('.create_lessons'),
                  class: 'btn btn-main'

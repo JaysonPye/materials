@@ -17,6 +17,7 @@ class LessonUploadsController < ApplicationController
 
   def create
     @lesson = authorize Lesson.new(lesson_upload_params)
+    @types = Lesson::TYPES
     @index = params[:index].to_i
     @status = 'Uploaded'
     return if @lesson.save
@@ -36,11 +37,36 @@ class LessonUploadsController < ApplicationController
   private
 
   def lesson_upload_params
-    params.require(:lesson_upload).permit(Lesson::CSV_HEADERS.map(&:to_sym))
+    lesson_params = params.require(:lesson_upload).permit(Lesson::CSV_HEADERS.map(&:to_sym))
+
+    # Manually handle non-strings
+    %i[admin_approval curriculum_approval lang_goals].each do |field|
+      lesson_params[field] = begin
+        JSON.parse(params[:lesson_upload][field])
+      rescue StandardError
+        default_value_for(field)
+      end
+    end
+
+    # Remove the id for create action
+    lesson_params.delete(:id) if action_name == 'create'
+
+    lesson_params
+  end
+
+  # Helper to provide default values for non-string fields
+  def default_value_for(field)
+    case field
+    when :admin_approval, :curriculum_approval
+      []
+    when :lang_goals
+      {}
+    end
   end
 
   def set_errors
     @errors = @lesson.errors.full_messages.to_sentence
+    Rails.logger.error "Lesson upload error: #{@errors}"
     @status = 'Error'
   end
 end

@@ -24,32 +24,47 @@ export interface teacher {
 	password: string;
 }
 
+export interface approval {
+	id: number;
+	name: string;
+}
+
 export interface lesson {
 	id: string;
-	admin_approval: string;
-	curriculum_approval: string;
+	admin_approval: approval[]; 
+	curriculum_approval: approval[];
 	goal: string;
 	internal_notes: string;
 	level: string;
-	release: string;
+	released: boolean;
 	title: string;
 	type: string;
-	add_difficulty: string;
-	example_sentences: string;
-	extra_fun: string;
-	instructions: string;
-	large_groups: string;
-	links: string;
-	materials: string;
-	notes: string;
-	outro: string;
+	creator_id: string;
+	assigned_editor_id: string;
+	created_at: string;
+	updated_at: string;
+	add_difficulty: string[];
+	example_sentences: string[];
+	extra_fun: string[];
+	instructions: string[];
+	large_groups: string[];
+    links: Record<string, string>;
+	materials: string[];
+	notes: string[];
+	outro: string[];
 	subtype: string;
-	topic: string;
-	vocab: string;
-	intro: string;
-	lang_goals: string;
-	interesting_fact: string;
-	status: string;
-	changed_lesson_id: string;
-	warning: string;
+	topic: string | null;
+	vocab: string[];
+	intro: string[];
+    lang_goals: langGoals;
+    interesting_fact: string | null;
+    status: string;
+    changed_lesson_id: string | null;
+    warning: string | null;
+}
+
+export interface langGoals {
+    sky: string[];
+    land: string[];
+    galaxy: string[];
 }

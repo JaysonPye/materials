@@ -39,6 +39,15 @@ export default class extends Controller<HTMLFormElement> {
             return;
         }
 
+        for (const [i, lesson] of lessons.entries()){
+            addRow({
+                csvRecord: lesson,
+                index: i,
+                headers: this.headersValue,
+                uploadType: "lesson",
+            });
+        }
+
         this.uploadLessons(lessons);
     }
 
@@ -47,8 +56,25 @@ export default class extends Controller<HTMLFormElement> {
             Papa.parse<lesson>(csv, {
                 header: true,
                 skipEmptyLines: true,
-                fastMode: true,
+                fastMode: false,
                 complete(results) {
+                    const jsonFields = [
+                        'admin_approval', 
+                        'curriculum_approval', 
+                        'lang_goals'
+                    ];
+                    results.data.forEach(row => {
+                        jsonFields.forEach(field => {
+                            if (typeof row[field] === 'string') {
+                                try {
+                                    row[field] = JSON.parse(row[field] || '{}');
+                                } catch (error) {
+                                    console.error(`Failed to parse ${field}:`, error);
+                                }
+                            }
+                        });
+                    });
+    
                     resolve(results.data);
                 },
                 error(err: Error) {
@@ -57,7 +83,7 @@ export default class extends Controller<HTMLFormElement> {
             });
         });
     }
-
+    
     async uploadLessons(lessons: lesson[]) {
         while (lessons.length > 0) {
             const index = lessons.length - 1;

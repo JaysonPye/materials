@@ -1,0 +1,68 @@
+- id = form = "lesson-#{@index}"
+- if @lesson.new_record?
+  - url = lesson_uploads_path
+  - method = :post
+- else
+  - url = lesson_upload_path(@lesson)
+  - method = :patch
+
+%tr.error{ data: { controller: 'upload-summary',
+                   'upload-summary-status-value': 'Error' },
+           id: "lesson-row-#{@index}" }
+
+  %td.bg-danger= @lesson.id
+  %td.bg-danger
+    = hidden_field_tag 'lesson_upload[admin_approval]', @lesson.admin_approval.to_json, form:
+  %td.bg-danger
+    = hidden_field_tag 'lesson_upload[curriculum_approval]', @lesson.curriculum_approval.to_json, form:
+
+  %td.bg-danger= text_field_tag 'lesson_upload[goal]', @lesson.goal, form:
+  %td.bg-danger= text_field_tag 'lesson_upload[internal_notes]', @lesson.internal_notes, form:
+
+  - levels = Lesson.levels.keys.map { |l| [l.titleize, l] }
+  %td.bg-danger
+    = select_tag 'lesson_upload[level]',
+                 options_for_select(levels, @lesson.level),
+                 class: 'bg-white', form:
+
+  %td.bg-danger= text_field_tag 'lesson_upload[released]', @lesson.released, form:
+
+  %td.bg-danger= text_field_tag 'lesson_upload[title]', @lesson.title, form:
+
+  -# Enum Field: Type
+  %td.bg-danger
+    = select_tag 'lesson_upload[type]',
+                 options_for_select(@types.map { |type| [type.titleize, type] }, @lesson.type),
+                 class: 'bg-white', form:
+
+  %td.bg-danger= text_field_tag 'lesson_upload[add_difficulty]', @lesson.add_difficulty, form:
+  %td.bg-danger= text_field_tag 'lesson_upload[example_sentences]', @lesson.example_sentences, form:
+  %td.bg-danger= text_field_tag 'lesson_upload[extra_fun]', @lesson.extra_fun, form:
+  %td.bg-danger= text_field_tag 'lesson_upload[instructions]', @lesson.instructions, form:
+  %td.bg-danger= text_field_tag 'lesson_upload[large_groups]', @lesson.large_groups, form:
+  %td.bg-danger= text_field_tag 'lesson_upload[links]', @lesson.links, form:
+  %td.bg-danger= text_field_tag 'lesson_upload[materials]', @lesson.materials, form:
+  %td.bg-danger= text_field_tag 'lesson_upload[notes]', @lesson.notes, form:
+  %td.bg-danger= text_field_tag 'lesson_upload[outro]', @lesson.outro, form:
+
+  %td.bg-danger= text_field_tag 'lesson_upload[subtype]', @lesson.subtype, form:
+  %td.bg-danger= text_field_tag 'lesson_upload[topic]', @lesson.topic, form:
+  %td.bg-danger= text_field_tag 'lesson_upload[vocab]', @lesson.vocab, form:
+  %td.bg-danger= text_field_tag 'lesson_upload[intro]', @lesson.intro, form:
+  %td.bg-danger= text_field_tag 'lesson_upload[lang_goals]', @lesson.lang_goals, form:
+  %td.bg-danger= text_field_tag 'lesson_upload[interesting_fact]', @lesson.interesting_fact, form:
+  %td.bg-danger= text_field_tag 'lesson_upload[status]', @lesson.status, form:
+  %td.bg-danger= text_field_tag 'lesson_upload[changed_lesson_id]', @lesson.changed_lesson_id, form:
+  %td.bg-danger= text_field_tag 'lesson_upload[warning]', @lesson.warning, form:
+
+  %td.bg-danger
+    = form_with model: @lesson, url:, method:, scope: :lesson_upload,
+                html: { class: 'flex items-center justify-center gap-2 p-2',
+                        id: } do |f|
+      %p Error
+      %span.material-symbols-outlined.animate-pulse error
+      = hidden_field_tag(:index, @index, form:)
+      = f.submit 'Submit', class: 'btn btn-main'
+
+%tr{ id: "lesson-errors-#{@index}" }
+  %td.bg-danger{ colspan: Lesson::CSV_HEADERS.size + 1 }= @errors
