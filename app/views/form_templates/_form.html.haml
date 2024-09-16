@@ -1,0 +1,39 @@
+-# locals: (template:)
+
+- model = action_name == 'new' ? [template.organisation, template] : template
+
+= form_with model:, html: { class: 'form' } do |f|
+  = render 'shared/form_errors', resource: template
+
+  %h2.text-center.text-2xl For #{template.organisation.name}
+  = f.hidden_field :organisation_id
+
+  .form-group
+    = f.label :title
+    = f.text_field :title, autofocus: true, required: true
+
+  .form-group
+    = f.label :description
+    = f.text_area :description
+
+  .flex.flex-wrap.justify-around.gap-3
+    - [FormTemplateSingleInput, FormTemplateMultiInput].each do |klass|
+      :ruby
+        class_name = klass.name.underscore
+        current_fields = template.fields.select { |field| field.instance_of?(klass) }
+
+      .flex.flex-col.gap-3{ data: { controller: 'fields' } }
+        %h2.text-center.text-2xl= t(".#{class_name}").pluralize
+        = f.fields_for :fields, current_fields do |ff|
+          = render "form_templates/#{class_name}", current_fields:, f: ff, new_record: false
+
+        %template{ 'data-fields-target' => 'template' }
+          = f.fields_for :fields, klass.new, child_index: 'CHILD' do |ff|
+            = render "form_templates/#{class_name}", current_fields:, f: ff, new_record: true
+
+        %button.btn.btn-secondary.self-center{ 'data-action' => 'fields#add' }
+          = t(".add_#{class_name}")
+
+        %div{ 'data-fields-target' => 'target' }
+
+  = f.submit class: 'btn btn-main'

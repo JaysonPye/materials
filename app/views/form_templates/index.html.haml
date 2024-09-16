@@ -1,0 +1,35 @@
+= render 'shared/subtitle', text: t('.form_templates')
+
+%main.flex.flex-col.gap-3.p-3
+  - if current_user.is?('Admin')
+    = render 'organisations/nav',
+             active_org: @org, orgs: @orgs,
+             path_func: :organisation_form_templates_path
+
+  = link_to new_organisation_form_template_path(@org),
+            class: 'btn btn-secondary flex items-center w-full md:w-1/3' do
+    = t('.new_template')
+    = render 'shared/svgs/next', classes: 'fill-white h-8 w-8'
+
+  %table.text-center
+    %thead
+      %tr
+        %th.thead.thead-s.bg-secondary-50= t('.template_title')
+        %th.thead.bg-secondary-50= t('.description')
+        %th.thead.bg-secondary-50= t('.fields')
+        %th.thead.thead-e.bg-secondary-50= t('.actions')
+    %tbody
+      - @form_templates.each do |ft|
+        %tr
+          %td.p-3= link_to ft.title, form_template_path(ft)
+          %td.p-3= ft.description
+          %td.p-3= ft.fields.map(&:name).to_sentence
+          %td.p-3
+            .flex.justify-around.gap-3
+              = link_to t('.edit'),
+                        edit_form_template_path(ft),
+                        class: 'btn btn-secondary'
+              = link_to 'Delete',
+                        form_template_path(ft),
+                        data: { turbo_method: :delete, turbo_confirm: t('confirm') },
+                        class: 'btn btn-danger'

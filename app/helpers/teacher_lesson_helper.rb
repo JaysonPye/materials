@@ -2,40 +2,41 @@
 
 module TeacherLessonHelper
   def lesson_type_heading(lesson)
-    case lesson.type
-    when 'KindyPhonic'
-      'Phonics Class'
-    when 'SpecialLesson'
-      lesson.title
-    else
-      lesson.type.titleize
-    end
+    heading = case lesson.type
+              when 'KindyPhonic', 'PhonicsClass'
+                'phonics'
+              when 'SpecialLesson'
+                lesson.title
+              else
+                lesson.type.underscore
+              end
+
+    t("lessons.#{heading}")
   end
 
-  def lesson_order_hash(level)
-    case level
-    when 'kindy', 'elementary'
-      { 'arrival' => 0, 'brush_up' => 1, 'snack' => 2,
-        'DailyActivity' => 3, 'Exercise' => 4, 'DailyGathering' => 5,
-        'PhonicsClass' => 6, 'KindyPhonic' => 6, 'EnglishClass' => 7,
-        'StandShowSpeak' => 8, 'bus_time' => 9 }
-    when 'keep_up'
-      { 'conversation_time' => 0, 'snack' => 1, 'book_activity' => 2,
-        'EveningClass' => 3, 'lesson_review' => 4 }
-    when 'specialist'
-      { 'homework_check' => 0, 'break_&_quiz' => 1, 'four_skills' => 2,
-        'project' => 3, 'EveningClass' => 4 }
-    end
+  def lesson_type_order(level)
+    order = {
+      'kindy' => %w[arrival brush_up snack SpecialLesson DailyActivity
+                    Exercise KindyPhonic EnglishClass StandShowSpeak bus_time],
+      'elementary' => %w[arrival brush_up snack SpecialLesson DailyActivity
+                         Exercise daily_gathering PhonicsClass EnglishClass
+                         StandShowSpeak bus_time],
+      'keep_up' => %w[conversation_time snack book_activity EveningClass
+                      lesson_review],
+      'specialist' => %w[homework_check break_&_quiz four_skills project
+                         EveningClass]
+    }[level]
+    return order if Flipper.enabled?(:afterschool_extras, current_user)
+
+    order - CategoryResource::AFTERSCHOOL_EXTRAS
   end
 
   def lesson_level_heading(lesson)
-    return lesson.subtype.titleize if %w[DailyActivity Exercise].include?(lesson.type)
-
-    if lesson.short_level == 'Specialist'
-      lesson.level.titleize
+    if %w[DailyActivity Exercise].include?(lesson.type)
+      t("lessons.subtypes.#{lesson.subtype}")
     else
-      lesson.short_level
-    end.upcase
+      t("levels.#{lesson.short_level.downcase.tr(' ', '_')}").upcase
+    end
   end
 
   def lesson_details_heading(lesson)

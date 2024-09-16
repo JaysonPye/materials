@@ -1,0 +1,40 @@
+= render 'shared/subtitle', text: t('.form_submissions')
+
+%main.flex.flex-col.gap-3.p-3
+  - if current_user.is?('Admin')
+    = render 'organisations/nav',
+             active_org: @org, orgs: @orgs,
+             path_func: :organisation_form_submissions_path
+
+  %details.dropdown.bg-secondary.text-white{ id: 'create_submission' }
+    %summary.font-semibold.p-2= t('.create_new')
+    %nav.dropdown-nav
+      - @templates.each do |template|
+        = link_to "#{template.title} template",
+                  new_organisation_form_submission_path(@org,
+                                                        template_id: template.id,
+                                                        staff_id: current_user.id),
+                  class: 'dropdown-item',
+                  id: "create_#{template.id}"
+
+  %table.text-center
+    %thead
+      %tr
+        %th.thead.thead-s.bg-secondary-50= t('.template_name')
+        %th.thead.bg-secondary-50= t('.parent')
+        %th.thead.bg-secondary-50= t('.staff')
+        %th.thead.thead-e.bg-secondary-50= t('.actions')
+    %tbody
+      - @submissions.each do |s|
+        %tr
+          %td.p-3= link_to s.form_template.title.titleize, form_submission_path(s)
+          %td.p-3
+            = s.parent ? s.parent.name : 'なし'
+          %td.p-3= s.staff.name
+
+          %td.p-3
+            .flex.justify-around.gap-3
+              = link_to t('.edit'),
+                        edit_form_submission_path(s),
+                        class: 'btn btn-secondary'
+              = render 'form_submissions/lock_toggle', submission: s

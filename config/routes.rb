@@ -45,6 +45,8 @@ Rails.application.routes.draw do
       end
 
       resources :organisations, except: %i[destroy] do
+        resources :form_submissions, shallow: true
+        resources :form_templates, shallow: true
         resources :schools
 
         resources :student_uploads, only: %i[create new show]
@@ -55,7 +57,7 @@ Rails.application.routes.draw do
         patch 'parent_uploads', to: 'parent_uploads#update', as: :parent_uploads_update
 
         resources :users, except: %i[destroy]
-        resources :admins, except: %i[destroy]
+        resources :admins
         resources :org_admins
         resources :parents
         resources :sales
@@ -84,6 +86,9 @@ Rails.application.routes.draw do
 
     root to: 'splashes#welcome'
   end
+
+  # Receives inquiries from contact form & forwards to Nakagawa
+  post 'inquiries' => 'inquiries#create'
 
   # Health check endpoint
   get 'up' => 'rails/health#show', as: :rails_health_check

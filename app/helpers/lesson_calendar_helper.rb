@@ -41,7 +41,8 @@ module LessonCalendarHelper
               lesson.short_level
             end
 
-    { 'DailyActivity' =>
+    {
+      'DailyActivity' =>
         { 'Kindy' => 'row-start-3', 'Elementary' => 'row-start-5' },
       'Exercise' =>
         { 'Kindy' => 'row-start-3', 'Elementary' => 'row-start-4' },
@@ -59,8 +60,18 @@ module LessonCalendarHelper
           'specialist' => 'row-start-[22]',
           'specialist_advanced' => 'row-start-[23]' },
       'SpecialLesson' =>
-        { 'All Levels' => 'row-start-[25]', 'Land' => 'row-start-[26]',
-          'Sky' => 'row-start-[27]', 'Galaxy' => 'row-start-[28]' } }[type][level]
+        { 'All Levels' => 'row-start-[25]', 'Kindy' => 'row-start-[26]',
+          'Land' => 'row-start-[27]', 'Sky' => 'row-start-[28]',
+          'Galaxy' => 'row-start-[29]' }
+    }[type][level]
+  end
+
+  def lesson_separator_rows
+    { 'DailyActivity' => 'row-start-6',
+      'PhonicsClass' => 'row-start-11',
+      'EnglishClass' => 'row-start-[16]',
+      'StandShowSpeak' => 'row-start-[20]',
+      'EveningClass' => 'row-start-[24]' }
   end
 
   def lesson_type_rows

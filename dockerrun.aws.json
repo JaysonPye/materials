@@ -9,7 +9,7 @@
     }
   ],
   "Image": {
-    "Name": "thatbballguy/materials:0.19.2-duplicate-guide"
+    "Name": "kidsup/materials:0.19.15-company-dockerhub"
   },
   "Ports": [
     {

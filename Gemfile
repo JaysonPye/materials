@@ -77,7 +77,7 @@ gem 'rdoc', '6.6.3.1'
 gem 'nokogiri', '1.16.5'
 
 # Bump rexml for CVE-2024-41123
-gem 'rexml', '~> 3.3.3'
+gem 'rexml', '~> 3.3.6'
 
 # logidze for versioning
 gem 'logidze', '~> 1.1'
@@ -87,9 +87,9 @@ gem 'csv', '~> 3.3'
 gem 'postgres-copy', '~> 1.7'
 
 # Use Flipper for feature flags
-gem 'flipper'
-gem 'flipper-active_record'
-gem 'flipper-ui'
+gem 'flipper', '1.3.1'
+gem 'flipper-active_record', '1.3.1'
+gem 'flipper-ui', '1.3.1'
 
 # lock fugit for CVE-2024-43380
 gem 'fugit', '~> 1.11.1'
